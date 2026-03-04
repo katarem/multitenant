@@ -5,19 +5,19 @@ spring:
   application:
     name: demo
 
-app:
-  datasources:
-    default-ds: auth
-    configs:
-      auth:
-        url: jdbc:postgresql://localhost:5432/auth
-        username: auth
-        password: auth
-      tenant-1:
-        url: jdbc:postgresql://localhost:5433/app
-        username: tenant1
-        password: tenant1
-      tenant-2:
-        url: jdbc:postgresql://localhost:5434/app
-        username: tenant2
-        password: tenant2
+katarem:
+  multitenant:
+    default: auth
+    datasources:
+        auth:
+          url: jdbc:postgresql://localhost:5432/auth
+          username: auth
+          password: auth
+        tenant-1:
+          url: jdbc:postgresql://localhost:5433/app
+          username: tenant1
+          password: tenant1
+        tenant-2:
+          url: jdbc:postgresql://localhost:5434/app
+          username: tenant2
+          password: tenant2

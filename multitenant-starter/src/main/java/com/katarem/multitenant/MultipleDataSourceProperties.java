@@ -1,6 +1,7 @@
 package com.katarem.multitenant;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.bind.Name;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +12,7 @@ public class MultipleDataSourceProperties {
     /**
      * Default datasource to use.
      */
+    @Name("default")
     private String defaultKey;
 
     /**
