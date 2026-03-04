@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -18,6 +20,7 @@ import java.util.Map;
 
 @AutoConfiguration
 @EnableConfigurationProperties(MultipleDataSourceProperties.class)
+@ConditionalOnProperty(prefix = "app.datasources", name = "configs")
 public class MultiTenantAutoConfiguration implements DisposableBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MultiTenantAutoConfiguration.class);
@@ -25,6 +28,7 @@ public class MultiTenantAutoConfiguration implements DisposableBean {
 
     @Bean
     @Primary
+    @ConditionalOnMissingBean(DataSource.class)
     DataSource dataSource(MultipleDataSourceProperties props) {
 
         if (props.getConfigs() == null || props.getConfigs().isEmpty()) {

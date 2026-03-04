@@ -102,6 +102,41 @@ Add dependency:
 
 Then define `app.datasources` in your `application.yaml` and set/clear `TenantContext` around tenant-scoped operations.
 
+## Install via JitPack
+
+Use this option when you want to consume the library directly from this GitHub repository.
+
+1. Create and push a Git tag in this repository (example: `v1.0.0`).
+2. Open `https://jitpack.io/#katarem/multi-tenant/v1.0.0` and wait for a successful build.
+3. In your target project, add the JitPack repository:
+
+```xml
+<repositories>
+  <repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+  </repository>
+</repositories>
+```
+
+4. Add the starter dependency. For this repository, use:
+
+```xml
+<dependency>
+  <groupId>com.github.katarem.multi-tenant</groupId>
+  <artifactId>multitenant-starter</artifactId>
+  <version>v1.0.0</version>
+</dependency>
+```
+
+5. Run:
+
+```bash
+mvn -U dependency:resolve
+```
+
+If you are unsure about coordinates for a given tag, copy the exact snippet shown by JitPack on the build page for that version.
+
 ## Demo Application (Reference Only)
 
 `multitenant-demo` is included only to demonstrate behavior.
