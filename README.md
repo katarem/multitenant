@@ -124,6 +124,27 @@ curl http://localhost:8080/api/tenants/tenant-2/probe
 - This starter currently uses programmatic `TenantContext` assignment.
 - Tenant propagation across async boundaries is not handled automatically.
 
+## Contributing
+
+Contributions are welcome.
+
+1. Fork the repository and create a feature branch.
+2. Keep changes focused and aligned with the scope of `multitenant-starter`.
+3. Ensure the project builds before opening a PR:
+
+```bash
+./mvnw clean install
+```
+
+4. Open a pull request with:
+- a clear description of the change
+- motivation and expected behavior
+- notes about compatibility impact (if any)
+
+When changing public behavior or configuration, update the README accordingly.
+If you add tests in the future, include how to run them in this section.
+
 ## License
 
-No license file is currently included in this repository.
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0).  
+See the `LICENSE` file for details.
