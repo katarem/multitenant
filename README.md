@@ -1,4 +1,4 @@
-# multitenant-starter
+<img src="https://capsule-render.vercel.app/api?type=waving&height=300&color=gradient&text=Multitenant-starter"/>
 
 `multitenant-starter` is a Spring Boot auto-configuration library for datasource-per-tenant routing.
 
@@ -118,6 +118,14 @@ Add dependency:
 
 Then define `katarem.multitenant` in your `application.yaml` and set/clear `TenantContext` around tenant-scoped operations.
 
+### Gradle
+
+```gradle
+dependencies {
+    implementation("io.github.katarem:multitenant-starter:v1.3.3")
+}
+```
+
 ## Install via JitPack
 
 Use this option when you want to consume the library directly from this GitHub repository.
@@ -152,6 +160,19 @@ mvn -U dependency:resolve
 ```
 
 If you are unsure about coordinates for a given tag, copy the exact snippet shown by JitPack on the build page for that version.
+
+### Gradle (JitPack)
+
+```gradle
+repositories {
+    mavenCentral()
+    maven { url = uri("https://jitpack.io") }
+}
+
+dependencies {
+    implementation("com.github.katarem.multitenant:multitenant-starter:1.3.2")
+}
+```
 
 ## Demo Application (Reference Only)
 
@@ -199,3 +220,5 @@ If you add tests in the future, include how to run them in this section.
 
 This project is licensed under the GNU General Public License v3.0 (GPL-3.0).  
 See the `LICENSE` file for details.
+
+<img src="https://capsule-render.vercel.app/api?type=waving&height=300&color=gradient&section=footer"/>
