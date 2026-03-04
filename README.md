@@ -24,13 +24,13 @@ It creates one `HikariDataSource` pool per configured tenant and exposes a prima
 
 ## Configuration
 
-The starter reads properties under `app.datasources`.
+The starter reads properties under `katarem.multitenant`.
 
 ```yaml
-app:
-  datasources:
-    default-ds: auth
-    configs:
+katarem:
+  multitenant:
+    default: auth
+    datasources:
       auth:
         url: jdbc:postgresql://localhost:5432/auth
         username: auth
@@ -45,25 +45,41 @@ app:
         password: tenant2
 ```
 
+Equivalent `application.properties`:
+
+```properties
+katarem.multitenant.default=auth
+katarem.multitenant.datasources.auth.url=jdbc:postgresql://localhost:5432/auth
+katarem.multitenant.datasources.auth.username=auth
+katarem.multitenant.datasources.auth.password=auth
+katarem.multitenant.datasources.tenant-1.url=jdbc:postgresql://localhost:5433/app
+katarem.multitenant.datasources.tenant-1.username=tenant1
+katarem.multitenant.datasources.tenant-1.password=tenant1
+katarem.multitenant.datasources.tenant-2.url=jdbc:postgresql://localhost:5434/app
+katarem.multitenant.datasources.tenant-2.username=tenant2
+katarem.multitenant.datasources.tenant-2.password=tenant2
+```
+
 ### Supported Properties
 
-- `app.datasources.default-ds`
-- `app.datasources.configs.<name>.url`
-- `app.datasources.configs.<name>.username`
-- `app.datasources.configs.<name>.password`
-- `app.datasources.configs.<name>.driver-class-name` (optional)
+- `katarem.multitenant.default`
+- `katarem.multitenant.datasources.<name>.url`
+- `katarem.multitenant.datasources.<name>.username`
+- `katarem.multitenant.datasources.<name>.password`
+- `katarem.multitenant.datasources.<name>.driver-class-name` (optional)
 
 ### Validation Rules
 
-- Startup fails if `app.datasources.configs` is missing or empty.
-- Startup fails if `default-ds` is not present in `configs`.
+- Startup fails if `katarem.multitenant.datasources` is missing or empty.
+- Startup fails if `katarem.multitenant.default` is missing.
+- Startup fails if `katarem.multitenant.default` is not present in `datasources`.
 
 ## Runtime Routing Model
 
 Routing depends on `TenantContext`:
 
 - `TenantContext.set("tenant-1")` routes to datasource `tenant-1`
-- `TenantContext.clear()` falls back to `default-ds`
+- `TenantContext.clear()` falls back to `katarem.multitenant.default`
 
 Minimal usage pattern:
 
@@ -86,7 +102,7 @@ From repository root:
 
 Library artifact:
 
-- `multitenant-starter/target/multitenant-starter-1.0.0.jar`
+- `multitenant-starter/target/multitenant-starter-v1.3.3.jar`
 
 ## Use in Another Project
 
@@ -94,20 +110,20 @@ Add dependency:
 
 ```xml
 <dependency>
-  <groupId>com.katarem</groupId>
+  <groupId>io.github.katarem</groupId>
   <artifactId>multitenant-starter</artifactId>
-  <version>1.0.0</version>
+  <version>v1.3.3</version>
 </dependency>
 ```
 
-Then define `app.datasources` in your `application.yaml` and set/clear `TenantContext` around tenant-scoped operations.
+Then define `katarem.multitenant` in your `application.yaml` and set/clear `TenantContext` around tenant-scoped operations.
 
 ## Install via JitPack
 
 Use this option when you want to consume the library directly from this GitHub repository.
 
-1. Create and push a Git tag in this repository (example: `v1.0.0`).
-2. Open `https://jitpack.io/#katarem/multi-tenant/v1.0.0` and wait for a successful build.
+1. Create and push a Git tag in this repository (example: `v1.3.3`).
+2. Open `https://jitpack.io/#katarem/multi-tenant/v1.3.3` and wait for a successful build.
 3. In your target project, add the JitPack repository:
 
 ```xml
@@ -123,9 +139,9 @@ Use this option when you want to consume the library directly from this GitHub r
 
 ```xml
 <dependency>
-  <groupId>com.github.katarem.multi-tenant</groupId>
+  <groupId>com.github.katarem.multitenant</groupId>
   <artifactId>multitenant-starter</artifactId>
-  <version>v1.0.0</version>
+  <version>1.3.2</version>
 </dependency>
 ```
 
