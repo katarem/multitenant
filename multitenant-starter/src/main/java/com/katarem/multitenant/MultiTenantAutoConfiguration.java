@@ -57,7 +57,7 @@ public class MultiTenantAutoConfiguration implements DisposableBean {
 
         String defaultKey = props.getDefaultDatasource();
         if (defaultKey == null || defaultKey.isBlank()) {
-            throw new IllegalStateException("katarem.multitenant.default-datasource is required");
+            throw new IllegalStateException("katarem.multitenant.default is required");
         }
 
         if (!targets.containsKey(defaultKey)) {
