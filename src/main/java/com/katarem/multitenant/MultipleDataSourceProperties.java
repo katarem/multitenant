@@ -9,7 +9,6 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "app.datasources")
 public class MultipleDataSourceProperties {
 
-    @Value("default")
     private String defaultDs;
 
     private Map<String, DataSourceProperties> configs = new HashMap<>();
