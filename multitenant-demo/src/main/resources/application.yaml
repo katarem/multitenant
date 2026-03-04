@@ -3,11 +3,11 @@ server:
 
 spring:
   application:
-    name: 'multiple-tenants'
+    name: demo
 
 app:
   datasources:
-    default_ds: auth
+    default-ds: auth
     configs:
       auth:
         url: jdbc:postgresql://localhost:5432/auth
