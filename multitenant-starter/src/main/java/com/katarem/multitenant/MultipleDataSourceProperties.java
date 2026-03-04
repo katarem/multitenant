@@ -13,7 +13,7 @@ public class MultipleDataSourceProperties {
      * Default datasource to use.
      */
     @Name("default")
-    private String defaultKey;
+    private String defaultDatasource;
 
     /**
      * Map of configured datasources for each tenant.
@@ -59,12 +59,12 @@ public class MultipleDataSourceProperties {
         }
     }
 
-    public String getDefaultKey() {
-        return defaultKey;
+    public String getDefaultDatasource() {
+        return defaultDatasource;
     }
 
-    public void setDefaultKey(String defaultKey) {
-        this.defaultKey = defaultKey;
+    public void setDefaultDatasource(String defaultDatasource) {
+        this.defaultDatasource = defaultDatasource;
     }
 
     public Map<String, DataSourceProperties> getDatasources() {

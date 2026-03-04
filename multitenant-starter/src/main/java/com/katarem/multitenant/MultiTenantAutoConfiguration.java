@@ -55,9 +55,9 @@ public class MultiTenantAutoConfiguration implements DisposableBean {
             pools.add(dataSource);
         });
 
-        String defaultKey = props.getDefaultKey();
+        String defaultKey = props.getDefaultDatasource();
         if (defaultKey == null || defaultKey.isBlank()) {
-            throw new IllegalStateException("katarem.multitenant.default is required");
+            throw new IllegalStateException("katarem.multitenant.default-datasource is required");
         }
 
         if (!targets.containsKey(defaultKey)) {
@@ -66,14 +66,14 @@ public class MultiTenantAutoConfiguration implements DisposableBean {
             );
         }
 
-        Object defaultDs = targets.get(props.getDefaultKey());
+        Object defaultDs = targets.get(props.getDefaultDatasource());
         if (defaultDs == null) {
             throw new IllegalStateException("Default datasource '" + defaultKey + "' not found");
         }
 
         TenantRouting routing = new TenantRouting();
         routing.setTargetDataSources(targets);
-        routing.setDefaultTargetDataSource(targets.get(props.getDefaultKey()));
+        routing.setDefaultTargetDataSource(targets.get(props.getDefaultDatasource()));
         routing.afterPropertiesSet();
 
         if(logged.compareAndSet(false, true)) {
