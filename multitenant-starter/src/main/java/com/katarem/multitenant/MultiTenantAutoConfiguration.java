@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -17,27 +17,30 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @AutoConfiguration
 @EnableConfigurationProperties(MultipleDataSourceProperties.class)
-@ConditionalOnProperty(prefix = "app.datasources", name = "configs")
+@ConditionalOnClass({DataSource.class, HikariDataSource.class})
 public class MultiTenantAutoConfiguration implements DisposableBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MultiTenantAutoConfiguration.class);
     private final List<HikariDataSource> pools = new ArrayList<>();
+
+    private static final AtomicBoolean logged = new AtomicBoolean(false);
 
     @Bean
     @Primary
     @ConditionalOnMissingBean(DataSource.class)
     DataSource dataSource(MultipleDataSourceProperties props) {
 
-        if (props.getConfigs() == null || props.getConfigs().isEmpty()) {
-            throw new IllegalStateException("app.datasources.configs is required and cannot be empty");
+        if (props.getDatasources() == null || props.getDatasources().isEmpty()) {
+            throw new IllegalStateException("katarem.mutltenant.datasources is required and cannot be empty");
         }
 
         Map<Object, Object> targets = new HashMap<>();
 
-        props.getConfigs().forEach((name, config) -> {
+        props.getDatasources().forEach((name, config) -> {
 
             HikariDataSource dataSource = new HikariDataSource();
 
@@ -52,23 +55,40 @@ public class MultiTenantAutoConfiguration implements DisposableBean {
             pools.add(dataSource);
         });
 
-        Object defaultDs = targets.get(props.getDefaultDs());
+        String defaultKey = props.getDefaultKey();
+        if (defaultKey == null || defaultKey.isBlank()) {
+            throw new IllegalStateException("katarem.multitenant.default is required");
+        }
+
+        if (!targets.containsKey(defaultKey)) {
+            throw new IllegalStateException(
+                    "Default datasource '" + defaultKey + "' not found. Available: " + targets.keySet()
+            );
+        }
+
+        Object defaultDs = targets.get(props.getDefaultKey());
         if (defaultDs == null) {
-            throw new IllegalStateException("Default datasource '" + props.getDefaultDs() + "' not found");
+            throw new IllegalStateException("Default datasource '" + defaultKey + "' not found");
         }
 
         TenantRouting routing = new TenantRouting();
         routing.setTargetDataSources(targets);
-        routing.setDefaultTargetDataSource(targets.get(props.getDefaultDs()));
+        routing.setDefaultTargetDataSource(targets.get(props.getDefaultKey()));
         routing.afterPropertiesSet();
 
-        logger.info("[multitenant-starter] Enabled. Routing DataSource initialized. default='{}', datasources={}",
-                props.getDefaultDs(), targets.keySet());
+        if(logged.compareAndSet(false, true)) {
+            logger.info("""
+                [katarem-multitenant] Multi-tenant datasource routing enabled
+                Default datasource : {}
+                Configured tenants : {}
+                Datasource pools   : {}
+                """, defaultKey, targets.keySet(), pools.size());
+        }
 
-        if (logger.isDebugEnabled()) {
-            props.getConfigs().forEach((name, cfg) ->
-                    logger.debug("[multitenant-starter] datasource='{}' url='{}' user='{}'",
-                            name, safeUrl(cfg.getUrl()), cfg.getUsername())
+        if (logger.isDebugEnabled() && logged.compareAndSet(false, true)) {
+            props.getDatasources().forEach((name, config) ->
+                    logger.debug("[katarem-multitenant] datasource='{}' url='{}' user='{}'",
+                            name, safeUrl(config.getUrl()), config.getUsername())
             );
         }
 
@@ -78,7 +98,9 @@ public class MultiTenantAutoConfiguration implements DisposableBean {
     @Override
     public void destroy() {
         pools.forEach(HikariDataSource::close);
-        logger.info("[multitenant-starter] Shutdown. Closed {} datasource pool(s).", pools.size());
+        if(logged.compareAndSet(false, true)){
+            logger.info("[katarem-multitenant] Shutdown. Closed {} datasource pool(s).", pools.size());
+        }
     }
 
     private static String safeUrl(String url) {

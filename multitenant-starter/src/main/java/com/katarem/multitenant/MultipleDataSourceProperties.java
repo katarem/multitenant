@@ -5,12 +5,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.HashMap;
 import java.util.Map;
 
-@ConfigurationProperties(prefix = "app.datasources")
+@ConfigurationProperties(prefix = "katarem.multitenant")
 public class MultipleDataSourceProperties {
 
-    private String defaultDs;
+    /**
+     * Default datasource to use.
+     */
+    private String defaultKey;
 
-    private Map<String, DataSourceProperties> configs = new HashMap<>();
+    /**
+     * Map of configured datasources for each tenant.
+     */
+    private Map<String, DataSourceProperties> datasources = new HashMap<>();
 
     public static class DataSourceProperties {
         private String url;
@@ -51,19 +57,19 @@ public class MultipleDataSourceProperties {
         }
     }
 
-    public String getDefaultDs() {
-        return defaultDs;
+    public String getDefaultKey() {
+        return defaultKey;
     }
 
-    public void setDefaultDs(String defaultDs) {
-        this.defaultDs = defaultDs;
+    public void setDefaultKey(String defaultKey) {
+        this.defaultKey = defaultKey;
     }
 
-    public Map<String, DataSourceProperties> getConfigs() {
-        return configs;
+    public Map<String, DataSourceProperties> getDatasources() {
+        return datasources;
     }
 
-    public void setConfigs(Map<String, DataSourceProperties> configs) {
-        this.configs = configs;
+    public void setDatasources(Map<String, DataSourceProperties> datasources) {
+        this.datasources = datasources;
     }
 }
