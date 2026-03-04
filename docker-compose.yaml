@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+
+  postgres-auth:
+    image: postgres:16
+    container_name: postgres-auth
+    environment:
+      POSTGRES_DB: auth
+      POSTGRES_USER: auth
+      POSTGRES_PASSWORD: auth
+    ports:
+      - "5432:5432"
+    volumes:
+      - auth-data:/var/lib/postgresql/data
+
+  postgres-tenant1:
+    image: postgres:16
+    container_name: postgres-tenant1
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: tenant1
+      POSTGRES_PASSWORD: tenant1
+    ports:
+      - "5433:5432"
+    volumes:
+      - tenant1-data:/var/lib/postgresql/data
+
+  postgres-tenant2:
+    image: postgres:16
+    container_name: postgres-tenant2
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: tenant2
+      POSTGRES_PASSWORD: tenant2
+    ports:
+      - "5434:5432"
+    volumes:
+      - tenant2-data:/var/lib/postgresql/data
+
+volumes:
+  auth-data:
+  tenant1-data:
+  tenant2-data:
