@@ -16,6 +16,10 @@
 	<name>multitenant-demo</name>
 	<description>Demo project for multitenant-starter</description>
 
+	<properties>
+		<maven.deploy.skip>true</maven.deploy.skip>
+	</properties>
+
 	<dependencies>
 
 		<dependency>

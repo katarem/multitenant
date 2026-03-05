@@ -12,8 +12,30 @@
 
     <artifactId>multitenant-starter</artifactId>
     <name>multitenant-starter</name>
-    <description>multitenant-starter</description>
+    <description>Spring Boot multitenant datasource routing starter</description>
+    <url>https://github.com/katarem/multitenant</url>
     <packaging>jar</packaging>
+
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+
+    <developers>
+        <developer>
+            <id>katarem</id>
+            <name>Katarem</name>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/katarem/multitenant.git</connection>
+        <developerConnection>scm:git:ssh://github.com/katarem/multitenant.git</developerConnection>
+        <url>https://github.com/katarem/multitenant</url>
+    </scm>
 
     <dependencies>
         <dependency>
