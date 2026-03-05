@@ -60,13 +60,66 @@ katarem.multitenant.datasources.tenant-2.username=tenant2
 katarem.multitenant.datasources.tenant-2.password=tenant2
 ```
 
+### Hikari Configuration (Global + Per Tenant)
+
+You can define shared Hikari settings once at global level and override only what you need for a specific tenant.
+
+```yaml
+katarem:
+  multitenant:
+    default: auth
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+    datasources:
+      auth:
+        url: jdbc:postgresql://localhost:5432/auth
+        username: auth
+        password: auth
+      tenant-1:
+        url: jdbc:postgresql://localhost:5433/app
+        username: tenant1
+        password: tenant1
+        hikari:
+          maximum-pool-size: 30
+          minimum-idle: 10
+```
+
+Equivalent `application.properties`:
+
+```properties
+katarem.multitenant.default=auth
+katarem.multitenant.hikari.maximum-pool-size=15
+katarem.multitenant.hikari.minimum-idle=5
+katarem.multitenant.hikari.connection-timeout=30000
+katarem.multitenant.hikari.idle-timeout=600000
+katarem.multitenant.datasources.auth.url=jdbc:postgresql://localhost:5432/auth
+katarem.multitenant.datasources.auth.username=auth
+katarem.multitenant.datasources.auth.password=auth
+katarem.multitenant.datasources.tenant-1.url=jdbc:postgresql://localhost:5433/app
+katarem.multitenant.datasources.tenant-1.username=tenant1
+katarem.multitenant.datasources.tenant-1.password=tenant1
+katarem.multitenant.datasources.tenant-1.hikari.maximum-pool-size=30
+katarem.multitenant.datasources.tenant-1.hikari.minimum-idle=10
+```
+
+How it works:
+
+- `katarem.multitenant.hikari.*` applies as the base Hikari configuration for all tenant pools.
+- `katarem.multitenant.datasources.<tenant>.hikari.*` applies only to that tenant.
+- If both define the same key, tenant-level value overrides the global one.
+
 ### Supported Properties
 
 - `katarem.multitenant.default`
+- `katarem.multitenant.hikari.<hikari-property>` (optional, global base config for all pools)
 - `katarem.multitenant.datasources.<name>.url`
 - `katarem.multitenant.datasources.<name>.username`
 - `katarem.multitenant.datasources.<name>.password`
 - `katarem.multitenant.datasources.<name>.driver-class-name` (optional)
+- `katarem.multitenant.datasources.<name>.hikari.<hikari-property>` (optional, per-tenant override)
 
 ### Validation Rules
 
@@ -102,7 +155,7 @@ From repository root:
 
 Library artifact:
 
-- `multitenant-starter/target/multitenant-starter-v1.3.3.jar`
+- `multitenant-starter/target/multitenant-starter-v1.4.0.jar`
 
 ## Use in Another Project
 
@@ -112,7 +165,7 @@ Add dependency:
 <dependency>
   <groupId>io.github.katarem</groupId>
   <artifactId>multitenant-starter</artifactId>
-  <version>v1.3.3</version>
+  <version>v1.4.0</version>
 </dependency>
 ```
 
@@ -122,7 +175,7 @@ Then define `katarem.multitenant` in your `application.yaml` and set/clear `Tena
 
 ```gradle
 dependencies {
-    implementation("io.github.katarem:multitenant-starter:v1.3.3")
+    implementation("io.github.katarem:multitenant-starter:v1.4.0")
 }
 ```
 
@@ -130,8 +183,8 @@ dependencies {
 
 Use this option when you want to consume the library directly from this GitHub repository.
 
-1. Create and push a Git tag in this repository (example: `v1.3.3`).
-2. Open `https://jitpack.io/#katarem/multi-tenant/v1.3.3` and wait for a successful build.
+1. Create and push a Git tag in this repository (example: `v1.4.0`).
+2. Open `https://jitpack.io/#katarem/multi-tenant/v1.4.0` and wait for a successful build.
 3. In your target project, add the JitPack repository:
 
 ```xml
@@ -149,7 +202,7 @@ Use this option when you want to consume the library directly from this GitHub r
 <dependency>
   <groupId>com.github.katarem.multitenant</groupId>
   <artifactId>multitenant-starter</artifactId>
-  <version>1.3.2</version>
+  <version>v1.4.0</version>
 </dependency>
 ```
 
@@ -170,7 +223,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.katarem.multitenant:multitenant-starter:1.3.2")
+    implementation("com.github.katarem.multitenant:multitenant-starter:v1.4.0")
 }
 ```
 

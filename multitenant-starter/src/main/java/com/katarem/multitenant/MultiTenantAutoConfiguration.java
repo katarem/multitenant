@@ -9,8 +9,11 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -32,7 +35,7 @@ public class MultiTenantAutoConfiguration implements DisposableBean {
     @Bean
     @Primary
     @ConditionalOnMissingBean(DataSource.class)
-    DataSource dataSource(MultipleDataSourceProperties props) {
+    DataSource dataSource(MultipleDataSourceProperties props, Environment env) {
 
         if (props.getDatasources() == null || props.getDatasources().isEmpty()) {
             throw new IllegalStateException("katarem.mutltenant.datasources is required and cannot be empty");
@@ -44,9 +47,16 @@ public class MultiTenantAutoConfiguration implements DisposableBean {
 
             HikariDataSource dataSource = new HikariDataSource();
 
+            // Global Hikari DataSource config
+            Binder.get(env).bind("katarem.multitenant.hikari", Bindable.ofInstance(config));
+
+            // Each Hikari DataSource config
+            Binder.get(env).bind("katarem.multitenant.datasources." + name + ".hikari", Bindable.ofInstance(config));
+
             dataSource.setJdbcUrl(config.getUrl());
             dataSource.setUsername(config.getUsername());
             dataSource.setPassword(config.getPassword());
+
             if (config.getDriverClassName() != null && !config.getDriverClassName().isBlank()) {
                 dataSource.setDriverClassName(config.getDriverClassName());
             }
