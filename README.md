@@ -171,59 +171,28 @@ Add dependency:
 
 Then define `katarem.multitenant` in your `application.yaml` and set/clear `TenantContext` around tenant-scoped operations.
 
-### Gradle
+## Published to Maven
 
-```gradle
-dependencies {
-    implementation("io.github.katarem:multitenant-starter:v1.4.0")
-}
-```
+The starter is available as a standard Maven artifact.
 
-## Install via JitPack
+- Maven users: no extra repository is required if you already use Maven Central.
+- Gradle users: keep `mavenCentral()` in `repositories`.
 
-Use this option when you want to consume the library directly from this GitHub repository.
-
-1. Create and push a Git tag in this repository (example: `v1.4.0`).
-2. Open `https://jitpack.io/#katarem/multi-tenant/v1.4.0` and wait for a successful build.
-3. In your target project, add the JitPack repository:
-
-```xml
-<repositories>
-  <repository>
-    <id>jitpack.io</id>
-    <url>https://jitpack.io</url>
-  </repository>
-</repositories>
-```
-
-4. Add the starter dependency. For this repository, use:
+### Maven
 
 ```xml
 <dependency>
-  <groupId>com.github.katarem.multitenant</groupId>
+  <groupId>io.github.katarem</groupId>
   <artifactId>multitenant-starter</artifactId>
   <version>v1.4.0</version>
 </dependency>
 ```
 
-5. Run:
-
-```bash
-mvn -U dependency:resolve
-```
-
-If you are unsure about coordinates for a given tag, copy the exact snippet shown by JitPack on the build page for that version.
-
-### Gradle (JitPack)
+### Gradle
 
 ```gradle
-repositories {
-    mavenCentral()
-    maven { url = uri("https://jitpack.io") }
-}
-
 dependencies {
-    implementation("com.github.katarem.multitenant:multitenant-starter:v1.4.0")
+    implementation("io.github.katarem:multitenant-starter:v1.4.0")
 }
 ```
 

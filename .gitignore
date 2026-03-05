@@ -1,6 +1,8 @@
 HELP.md
 target/
 .mvn/
+.DS_Store
+*.versionsBackup
 !**/src/main/**/target/
 !**/src/test/**/target/
 
