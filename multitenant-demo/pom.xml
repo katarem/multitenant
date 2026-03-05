@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>io.github.katarem</groupId>
 		<artifactId>multiple-tenant</artifactId>
-		<version>v1.4.1</version>
+		<version>v1.4.2</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
